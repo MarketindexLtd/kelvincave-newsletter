@@ -119,17 +119,21 @@ Scripts are in `project/`. They were written on Windows with **hardcoded absolut
 (`C:\Users\Admin\...`) - update those paths for your machine before running.
 
 - Python 3.12 + libs: `pip install pymupdf python-docx pillow`
-- `extract_images.py` - pull images out of the print PDF (page-mapped).
-- `crop_tables.py` / `fix_tables.py` - crop the data tables/figure panels from the PDF as images.
-- `render_pages.py` - render PDF pages to PNG (used to locate tables).
-- `build_doc.py` - builds the 11 per-article **Word docs** (with images + table images) that the
-  client used to publish the web articles. Output was a local `KnowHow-Summer-2026-website` folder
-  (one folder per article) - NOT in this repo; regenerate if needed.
+
+**Email build scripts included in `project/` (these are what you need to continue the newsletter):**
 - `build_final.py` - builds v3 alternating (the canonical `knowhow-summer-2026-email.html`).
 - `build_variants.py` - builds the alternating + hero-list samples (v4 source).
 - `build_gallery.py` - builds v1 (green), v2 (image-led), copies v3/v4, writes `index.html`.
   Run order to regenerate all: `build_final.py` -> `build_variants.py` -> `build_gallery.py`.
-- Previews were rendered with headless Edge (`msedge --headless=new --screenshot=...`).
+- `build_email.py` - earlier standalone v2 image-led generator (superseded by build_gallery).
+- Previews were rendered with headless Edge (`msedge --headless=new --screenshot=out.png <file-uri>`).
 
-Deliverable HTML/images already committed to repo root, so simple layout tweaks can be made by
+**Not in the repo** (their job is finished - the 11 web articles are already published, so these
+were one-off): the PDF-extraction and Word-doc scripts (`extract_images.py`, `crop_tables.py`,
+`fix_tables.py`, `render_pages.py`, `build_doc.py`). They produced a local
+`KnowHow-Summer-2026-website` folder of 11 per-article Word docs (each with photos + table images
+cropped from the PDF) that the client used to publish the site. Ask Claude to regenerate them from
+the print PDF if ever needed.
+
+Deliverable HTML/images are already committed to repo root, so simple layout tweaks can be made by
 editing the HTML directly without rerunning Python.
