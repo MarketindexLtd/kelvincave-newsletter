@@ -55,9 +55,11 @@ def wrap(inner, bg="#eef1f4"):
 {inner}
 </table></td></tr></table></body></html>"""
 
-INTRO = """<tr><td style="padding:22px 24px 6px 24px;font-family:Arial,Helvetica,sans-serif;font-size:16px;line-height:24px;color:#333;">
+PDF_URL = "https://kelvincave.com/wp-content/uploads/2026/06/knowhow-summer-2026.pdf"
+
+INTRO = f"""<tr><td style="padding:22px 24px 6px 24px;font-family:Arial,Helvetica,sans-serif;font-size:16px;line-height:24px;color:#333;">
 <p style="margin:0;">Welcome to the Summer 2026 edition of KnowHow. As harvest approaches, here are ways to get more from home-grown and locally sourced feeds, from a 37% pre-lambing feed cost saving to preserving grain without drying.</p>
-<p style="margin:12px 0 0 0;font-size:14px;line-height:20px;color:#333;">Prefer the full magazine? <a href="#" style="color:#0C4E42;font-weight:bold;text-decoration:underline;">Read the complete issue as a PDF</a></p></td></tr>"""
+<p style="margin:12px 0 0 0;font-size:14px;line-height:20px;color:#333;">Prefer the full magazine? <a href="{PDF_URL}" style="color:#0C4E42;font-weight:bold;text-decoration:underline;">Read the complete issue as a PDF</a></p></td></tr>"""
 
 # ---------- V1: ORIGINAL GREEN (text-led) ----------
 def v1_green():
@@ -85,7 +87,9 @@ def v1_green():
 
 # ---------- V2: IMAGE-LED FULL-WIDTH ----------
 def v2_imageled():
-    head='<tr><td><img src="knowhow-masthead.png" width="600" alt="KnowHow Summer 2026 - Kelvin Cave" style="display:block;width:100%;max-width:600px;height:auto;border:0;" /></td></tr>'
+    # Blue masthead: client confirmed the season colour for Summer 2026 is blue, matching
+    # the printed issue (the coral knowhow-masthead.png was their Autumn edition colour).
+    head='<tr><td><img src="knowhow-masthead-blue.png" width="600" alt="KnowHow Summer 2026 - Kelvin Cave" style="display:block;width:100%;max-width:600px;height:auto;border:0;" /></td></tr>'
     toc=""
     for i,(label,img,title,teaser,url) in enumerate(ART,1):
         toc+=f'<tr><td style="padding:3px 0;font-family:Arial,Helvetica,sans-serif;font-size:14px;line-height:20px;"><span style="color:#6E97B8;font-weight:bold;">{i:02d}</span>&nbsp;&nbsp;<a href="{url}" style="color:#2f5c7a;text-decoration:none;">{esc(title)}</a></td></tr>'
@@ -112,16 +116,19 @@ shutil.copyfile(os.path.join(EMAIL_DIR,"sample-B-hero-list.html"), os.path.join(
 print("wrote v1-green, v2-imageled, v3-alternating, v4-hero-list")
 
 # ---------- Gallery index ----------
+SELECTED = "v2-imageled.html"   # client chose gallery option 3 on 2026-07-30
+
 cards = [
  ("v1-green.html","1. Marketindex Edition","Our custom take: green brush-script masthead, an In-this-issue box and category-tagged cards. A fresh, distinctive look.","#0C4E42"),
  ("v3-alternating.html","2. Alternating","Photos alternate left and right with the text, category labels and even spacing. Balanced and editorial.","#8B9A3D"),
- ("v2-imageled.html","3. Image-led (full width)","A big full-width photo per story with a contents box. Closest to the printed KnowHow look.","#6E97B8"),
+ ("v2-imageled.html","3. Image-led (full width)","A big full-width photo per story with a contents box. Closest to the printed KnowHow look. Now with the blue Summer masthead and the PDF download linked.","#6E97B8"),
  ("v4-hero-list.html","4. Featured + list","One big lead story, then the rest as compact rows. Short and punchy.","#D9795E"),
 ]
 cardhtml=""
 for href,title,desc,c in cards:
+    chip='<span class="chip">SELECTED</span>' if href==SELECTED else ''
     cardhtml+=f"""<a class="card" href="{href}" style="border-top:5px solid {c};">
-<div class="ct" style="color:{c};">{title}</div><div class="cd">{desc}</div><div class="cl">Open preview &rsaquo;</div></a>"""
+<div class="ct" style="color:{c};">{title}{chip}</div><div class="cd">{desc}</div><div class="cl">Open preview &rsaquo;</div></a>"""
 index=f"""<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>KnowHow Summer 2026 - email layout options</title>
 <style>
@@ -136,10 +143,11 @@ body{{margin:0;font-family:-apple-system,Segoe UI,Arial,sans-serif;background:#e
 .ct{{font-size:18px;font-weight:700;margin-bottom:8px;}} .cd{{color:#555;font-size:14px;line-height:20px;}}
 .cl{{margin-top:12px;font-weight:700;color:#2f5c7a;font-size:14px;}}
 .note{{margin-top:22px;font-size:13px;color:#666;line-height:19px;}}
+.chip{{display:inline-block;background:#6E97B8;color:#fff;font-size:11px;font-weight:700;letter-spacing:1.5px;padding:3px 9px;border-radius:3px;vertical-align:middle;margin-left:8px;}}
 </style></head><body>
 <div class="hero"><h1>KnowHow &ndash; Summer 2026</h1><p>Email newsletter layout options for review</p></div>
 <div class="wrap"><div class="grid">{cardhtml}</div>
-<p class="note">Each option is a live preview of the email. Click any card to open it. The photos and "Read more" links go to the published articles on kelvincave.com.</p></div>
+<p class="note">Each option is a live preview of the email. Click any card to open it. The photos and "Read more" links go to the published articles on kelvincave.com, and "Read the complete issue as a PDF" goes to the full Summer 2026 magazine.<br /><br /><strong>Option 3 has been selected</strong> and is being finalised for sending. Its masthead is now blue to match the printed Summer issue; the other three still show the coral Autumn masthead.</p></div>
 </body></html>"""
 open(os.path.join(EMAIL_DIR,"index.html"),"w",encoding="utf-8").write(index)
 print("wrote index.html gallery")

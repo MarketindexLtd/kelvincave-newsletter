@@ -4,7 +4,7 @@ Full state of the Kelvin Cave "KnowHow" Summer 2026 email newsletter project, so
 picked up on any machine. Client of **Marketindex**. (Kelvin Cave = agricultural feed / silage
 company, kelvincave.com.)
 
-Last updated: 2026-07-29.
+Last updated: 2026-07-30.
 
 ---
 
@@ -25,14 +25,19 @@ lives locally in Downloads, NOT in git - too big).
 
 - Repo: **MarketindexLtd/kelvincave-newsletter** (public).
 - GitHub Pages gallery: **https://marketindexltd.github.io/kelvincave-newsletter/**
-- Four layout options for the client to choose from:
+- Four layout options for the client to choose from. **Careful: the gallery numbering does NOT
+  match the filenames.** Gallery option number first:
   1. `v1-green.html`  - "Marketindex Edition": green brush-script masthead, In-this-issue box,
      category-tagged cards. Our distinctive custom take.
   2. `v3-alternating.html` - photos alternate left/right with text.
   3. `v2-imageled.html` - big full-width photo per story + contents box (closest to print).
+     **<- THIS IS THE ONE THE CLIENT CHOSE (2026-07-30).** They referred to it as
+     "version 3 image led", i.e. gallery option 3.
   4. `v4-hero-list.html` - one featured story then compact list.
-- `index.html` = the gallery landing page (numbered cards linking to the four).
-- Images in repo root: `knowhow-masthead.png` (coral, used by v2/v3/v4),
+- `index.html` = the gallery landing page (numbered cards linking to the four). Option 3 now
+  carries a SELECTED chip and a footnote explaining the blue vs coral masthead.
+- Images in repo root: `knowhow-masthead-blue.png` (blue, used by the selected v2),
+  `knowhow-masthead.png` (coral, still used by v3/v4),
   `knowhow-masthead-green.png` (green, used by v1), `kc_logo.png`, `img-01.jpg`..`img-08.jpg`
   (the 8 hero photos, cropped to a uniform 3:2).
 
@@ -46,9 +51,18 @@ Pages redeploys automatically in ~30-60s.
 - Green: **#0C4E42**  Gold: **#FDB724**  (sampled from the KC logo).
 - Category-label colours: CASE STUDY `#8B9A3D` (olive), TECHNICAL ARTICLE `#D9795E` (coral),
   NEWS / PRODUCTS `#6E97B8` (blue).
-- Masthead source: the KnowHow wordmark. Coral version was their previous email masthead
-  (createsend URL). Green version was made by recolouring the coral one (see
-  `project/` scripts). The print cover masthead is blue.
+- **Seasonal masthead colour.** KnowHow changes masthead colour by season. The coral masthead we
+  started from was their **Autumn** edition (the sample they first sent us). Summer 2026 is
+  **blue** - confirmed by the client 2026-07-30, matching the issue they just printed.
+  So: coral = Autumn, blue = Summer. Ask which colour applies before building a future issue.
+- Masthead files: coral `knowhow-masthead.png` was their previous email masthead (createsend URL)
+  and is the source image. `knowhow-masthead-blue.png` (#6E97B8 brand blue) and
+  `knowhow-masthead-green.png` were made by recolouring it. Use
+  `project/recolour_masthead.py` to generate a new season colour - edit `TARGET_BG` and `OUT`,
+  then run it. It swaps only the background, keeping the cream wordmark, tagline, brushed
+  bottom edge and the KC logo intact.
+- Blue chosen for the masthead is `#6E97B8`, the same blue already used for the article title
+  bands, contents box and footer in v2, so the masthead ties into the layout.
 - Emails are 600px, table-based, inline styles, bulletproof buttons. No emojis, no em dashes
   (client copy rules).
 
@@ -76,29 +90,43 @@ the "5Ps product range" spread, "Could Wagyu work for you?", and "Perfecting you
 
 ## 5. Outstanding TODO
 
-- [ ] **Client picks a layout** (email draft is in section 7). Then finalise that one.
-- [ ] **PDF download link**: all 4 emails have a placeholder line "Prefer the full magazine? Read
-      the complete issue as a PDF" with `href="#"`. Still to do: compress the 71 MB print PDF to a
-      few MB, host it (client WordPress media or similar), and drop the real URL into the `href`.
-- [ ] **Brevo build** (see section 6).
+- [x] **Client picks a layout** - DONE 2026-07-30. They chose gallery option 3, the image-led
+      full-width version = `v2-imageled.html`.
+- [x] **Masthead recoloured to blue** - DONE 2026-07-30 on the selected version. See section 3.
+- [x] **PDF download link** - DONE 2026-07-30. The client hosted it themselves at
+      https://kelvincave.com/wp-content/uploads/2026/06/knowhow-summer-2026.pdf
+      (6.1 MB, already compressed down from the 71 MB press PDF, returns HTTP 200). Wired into
+      all four versions and into `PDF_URL` in `build_gallery.py`.
+- [ ] **Brevo build** (see section 6). This is now the only thing between us and sending.
+- [ ] **Optional, worth raising with the client:** the selected version has no issue/date marker
+      anywhere in the email body. The printed cover carries "SUMMER 2026" top-right in the
+      masthead; our masthead image does not. v1 solves this with a gold "SUMMER 2026" strip under
+      the masthead. Consider adding the same strip (in blue/cream) to v2, or burning the text into
+      the masthead image. Not done - it changes the agreed design, so ask first.
 - [ ] **Unlink cleanup**: moghees-hub is currently a *temporary* Write collaborator on this repo
       (so the CLI could push). Remove it when done. Also delete the duplicate repo
       **moghees-hub/kelvincave-newsletter** (created as a fallback before org hosting worked).
 
 ## 6. Brevo build checklist (for the sender)
 
-1. New campaign > Email > "paste your own HTML"; paste the chosen version's HTML.
-2. Upload images to Brevo and repoint: the masthead (`knowhow-masthead*.png`) and the 8 photos
-   (`img-01`..`img-08.jpg`). (The `img-*` are also served from this repo if you prefer absolute URLs.)
-3. Replace `{{ unsubscribe }}` / the `#` unsubscribe link with Brevo's unsubscribe tag.
-4. Wire the PDF placeholder link once the PDF is hosted.
+1. New campaign > Email > "paste your own HTML"; paste **`v2-imageled.html`** (the selected one).
+2. Repoint the masthead image. `v2-imageled.html` references `knowhow-masthead-blue.png` as a
+   RELATIVE path, which will not resolve inside Brevo. Either upload it to Brevo's image library
+   and use that URL, or use the absolute GitHub Pages URL:
+   https://marketindexltd.github.io/kelvincave-newsletter/knowhow-masthead-blue.png
+   The 8 article photos already use absolute kelvincave.com URLs, so they need no change.
+3. Replace the `href="#"` unsubscribe link at the bottom with Brevo's unsubscribe tag.
+4. PDF link is already wired (section 5) - nothing to do, but click it in the test send to confirm.
 5. Set sender name/email (e.g. info@kelvincave.com), subject + preheader.
    Subject: "Your Summer 2026 KnowHow: cutting feed costs, harvest prep and home-grown feed".
 6. Send a test to yourself, check mobile + desktop, then send.
 7. Need the sender domain (kelvincave.com) authenticated in Brevo (SPF/DKIM) for deliverability
    to 2,500 people. Client's web/IT to add Brevo's DNS records.
 
-## 7. Client email (ask them to choose)
+## 7. Client email (ask them to choose) - SENT AND ANSWERED
+
+Kept for reference / reuse on the next issue. They came back on 2026-07-30 choosing option 3 and
+flagging the seasonal masthead colour (see section 3).
 
 Subject: KnowHow Summer 2026 email - please pick a layout
 
@@ -126,6 +154,9 @@ Scripts are in `project/`. They were written on Windows with **hardcoded absolut
 - `build_gallery.py` - builds v1 (green), v2 (image-led), copies v3/v4, writes `index.html`.
   Run order to regenerate all: `build_final.py` -> `build_variants.py` -> `build_gallery.py`.
 - `build_email.py` - earlier standalone v2 image-led generator (superseded by build_gallery).
+- `recolour_masthead.py` - recolours the masthead background to a new season colour, keeping the
+  cream wordmark, brush edge and KC logo. Edit `TARGET_BG`/`OUT` and run. Uses relative paths, so
+  unlike the other scripts it runs anywhere. This is what produced `knowhow-masthead-blue.png`.
 - Previews were rendered with headless Edge (`msedge --headless=new --screenshot=out.png <file-uri>`).
 
 **Not in the repo** (their job is finished - the 11 web articles are already published, so these
