@@ -65,6 +65,10 @@ Pages redeploys automatically in ~30-60s.
   bands, contents box and footer in v2, so the masthead ties into the layout.
 - Emails are 600px, table-based, inline styles, bulletproof buttons. No emojis, no em dashes
   (client copy rules).
+- Article spacing in v2 is controlled by `GAP` (space above each article block) and
+  `GAP_AFTER_BUTTON` (space below the Read more button) at the top of `build_gallery.py`.
+  Currently 40 + 8 = 48px between articles, raised from 26px on client feedback 2026-07-30 that
+  the articles were too close together. Turn these two knobs if asked for more or less air.
 
 ---
 

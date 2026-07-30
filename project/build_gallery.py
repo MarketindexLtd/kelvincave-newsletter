@@ -57,6 +57,11 @@ def wrap(inner, bg="#eef1f4"):
 
 PDF_URL = "https://kelvincave.com/wp-content/uploads/2026/06/knowhow-summer-2026.pdf"
 
+# Vertical gap between article blocks in v2 (was 26, raised on client feedback 2026-07-30 that
+# the articles sat too close together). Paired with GAP_AFTER_BUTTON below the "Read more" button.
+GAP = 40
+GAP_AFTER_BUTTON = 8
+
 INTRO = f"""<tr><td style="padding:22px 24px 6px 24px;font-family:Arial,Helvetica,sans-serif;font-size:16px;line-height:24px;color:#333;">
 <p style="margin:0;">Welcome to the Summer 2026 edition of KnowHow. As harvest approaches, here are ways to get more from home-grown and locally sourced feeds, from a 37% pre-lambing feed cost saving to preserving grain without drying.</p>
 <p style="margin:12px 0 0 0;font-size:14px;line-height:20px;color:#333;">Prefer the full magazine? <a href="{PDF_URL}" style="color:#0C4E42;font-weight:bold;text-decoration:underline;">Read the complete issue as a PDF</a></p></td></tr>"""
@@ -99,12 +104,12 @@ def v2_imageled():
 <tr><td style="padding:0 24px;"><table role="presentation" width="100%" cellpadding="0" cellspacing="0">"""
     for i,(label,img,title,teaser,url) in enumerate(ART,1):
         lc=COL[label]
-        body+=f"""<tr><td style="padding:26px 0 0 0;"><table role="presentation" width="100%" cellpadding="0" cellspacing="0">
+        body+=f"""<tr><td style="padding:{GAP}px 0 0 0;"><table role="presentation" width="100%" cellpadding="0" cellspacing="0">
 <tr><td style="background-color:{lc};padding:7px 20px;font-family:Arial,Helvetica,sans-serif;font-size:12px;letter-spacing:2px;color:#fff;text-transform:uppercase;font-weight:bold;">{label}</td></tr>
 <tr><td><a href="{url}"><img src="{BASE+img}" width="600" alt="{esc(title)}" style="display:block;width:100%;max-width:600px;height:auto;border:0;" /></a></td></tr>
 <tr><td style="background-color:#6E97B8;padding:12px 20px;font-family:Arial,Helvetica,sans-serif;font-size:19px;line-height:24px;color:#fff;font-weight:bold;"><span style="opacity:0.85;">{i:02d}.</span>&nbsp; {esc(title)}</td></tr>
 <tr><td style="padding:16px 22px 0 22px;font-family:Arial,Helvetica,sans-serif;font-size:15px;line-height:23px;color:#444;">{esc(teaser)}</td></tr>
-<tr><td style="padding:14px 22px 0 22px;"><table role="presentation" cellpadding="0" cellspacing="0"><tr><td bgcolor="{BUTTON}" style="border-radius:4px;"><a href="{url}" style="display:inline-block;padding:9px 24px;font-family:Arial,Helvetica,sans-serif;font-size:14px;font-weight:bold;color:#fff;text-decoration:none;border-radius:4px;">Read more</a></td></tr></table></td></tr>
+<tr><td style="padding:14px 22px {GAP_AFTER_BUTTON}px 22px;"><table role="presentation" cellpadding="0" cellspacing="0"><tr><td bgcolor="{BUTTON}" style="border-radius:4px;"><a href="{url}" style="display:inline-block;padding:9px 24px;font-family:Arial,Helvetica,sans-serif;font-size:14px;font-weight:bold;color:#fff;text-decoration:none;border-radius:4px;">Read more</a></td></tr></table></td></tr>
 </table></td></tr>"""
     body+="</table></td></tr>"
     return wrap(head+body+EVENTS+footer())
