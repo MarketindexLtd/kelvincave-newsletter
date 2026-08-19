@@ -1,4 +1,29 @@
 # -*- coding: utf-8 -*-
+#
+# =====================================================================================
+#  STOP - READ BEFORE RUNNING THIS ON THE HOME (WINDOWS) MACHINE
+# =====================================================================================
+#
+#  git pull FIRST. Running a stale copy of this script silently reverts approved work.
+#
+#  It already happened once: on 2026-08-12 a rebuild from a stale clone overwrote
+#  v2-imageled.html and reverted the blue masthead back to coral and the article
+#  spacing back to 26px. The live preview served the wrong version to the client for a
+#  week before it was spotted. Restored 2026-08-19.
+#
+#  CURRENT APPROVED STATE of the selected layout (v2-imageled.html):
+#    * Masthead is BLUE  -> knowhow-masthead-blue.png, NOT the coral knowhow-masthead.png.
+#      KnowHow changes masthead colour by season: coral = Autumn, blue = Summer.
+#      The coral one was their Autumn sample; Summer 2026 is blue. Client confirmed
+#      2026-07-30. Do not "fix" this back to coral.
+#    * Article spacing is GAP = 40 (+8 below the button), not the original 26.
+#    * The PDF download link is wired to the real kelvincave.com URL. Already done.
+#
+#  After running this, ALWAYS run:  python project/check_sync.py
+#  and, if v2-imageled.html changed:  python project/build_brevo.py
+#
+#  Full context: project/NOTES.md section 0.
+# =====================================================================================
 import os, shutil
 EMAIL_DIR = r"C:\Users\Admin\Downloads\KnowHow-Summer-2026-email"
 
@@ -113,6 +138,38 @@ def v2_imageled():
 </table></td></tr>"""
     body+="</table></td></tr>"
     return wrap(head+body+EVENTS+footer())
+
+def _abort_if_stale():
+    """Refuse to rebuild from a clone that is behind origin - the 2026-08-12 failure mode.
+
+    Fails open (just warns) if git or the network is unavailable, so this cannot block an
+    offline rebuild. Pass --force to skip.
+    """
+    import subprocess
+    import sys
+    if "--force" in sys.argv:
+        print("!! --force given: skipping the staleness check.")
+        return
+    repo = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    try:
+        subprocess.run(["git", "-C", repo, "fetch", "--quiet"], check=True, timeout=30)
+        behind = subprocess.run(
+            ["git", "-C", repo, "rev-list", "--count", "HEAD..@{upstream}"],
+            check=True, capture_output=True, text=True, timeout=30).stdout.strip()
+    except Exception as e:
+        print(f"   (could not check whether this clone is up to date: {e})")
+        return
+    if behind and behind != "0":
+        sys.exit(
+            f"\nABORTED: this clone is {behind} commit(s) behind origin.\n"
+            "Rebuilding now would overwrite work done on the other machine - which is exactly\n"
+            "what reverted the masthead colour on 2026-08-12.\n\n"
+            "    git pull\n\n"
+            "then run this again. Use --force only if you are certain.\n")
+    print("   (clone is up to date with origin)")
+
+
+_abort_if_stale()
 
 open(os.path.join(EMAIL_DIR,"v1-green.html"),"w",encoding="utf-8").write(v1_green())
 open(os.path.join(EMAIL_DIR,"v2-imageled.html"),"w",encoding="utf-8").write(v2_imageled())

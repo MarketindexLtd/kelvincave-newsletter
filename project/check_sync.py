@@ -31,6 +31,9 @@ def generate():
                  lambda m: f'captured["{m.group(1)}"] = {m.group(2)}', src, flags=re.M)
     # v3/v4 are copied from files that only exist on the original build machine.
     src = re.sub(r'^(shutil\..*|import shutil.*)$', 'pass', src, flags=re.M)
+    # Skip the build script's own staleness guard: we only want to compare content here,
+    # not hit the network or exit on behalf of the caller.
+    src = re.sub(r'^_abort_if_stale\(\)$', 'pass', src, flags=re.M)
     captured = {}
     exec(compile(src, "build_gallery.py", "exec"), {"__name__": "notmain", "captured": captured})
     return captured
