@@ -4,7 +4,27 @@ Full state of the Kelvin Cave "KnowHow" Summer 2026 email newsletter project, so
 picked up on any machine. Client of **Marketindex**. (Kelvin Cave = agricultural feed / silage
 company, kelvincave.com.)
 
-Last updated: 2026-07-30.
+Last updated: 2026-08-19.
+
+---
+
+## 0. READ THIS FIRST - cross-machine drift
+
+This project gets picked up on more than one machine. On **2026-08-12** a rebuild from a stale
+clone overwrote `v2-imageled.html` and silently reverted two approved changes (the blue Summer
+masthead back to coral, and the article spacing back to 26px). The preview site served the wrong
+version for about a week before anyone noticed. Restored 2026-08-19.
+
+To avoid a repeat:
+
+1. **`git pull` before doing anything.** The other machine may be ahead.
+2. **Never regenerate from a local copy of `build_gallery.py` without pulling first.** The script
+   is the source of truth for `v1-green.html`, `v2-imageled.html` and `index.html`; running an old
+   copy silently reverts whatever it does not know about.
+3. **Run `python project/check_sync.py` before you push.** It regenerates from the script and
+   diffs against the committed HTML, exiting non-zero on drift. It is what would have caught this.
+4. After any change to `v2-imageled.html`, also rerun `python project/build_brevo.py` so the
+   Brevo file does not drift from the preview.
 
 ---
 
